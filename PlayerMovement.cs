@@ -25,6 +25,10 @@ namespace Mododger
                     fps = __instance.gameObject.AddComponent<FirstPersonPlayerMovement>();
                     GameObject.Find("ball_sns").SetActive(false);
                 }
+                else
+                {
+                    if (fps != null) GameObject.Destroy(fps);
+                }
                 originalMouseSpeed = GameData.mouseSpeed;
             }
         }
@@ -53,6 +57,7 @@ namespace Mododger
             }
             else
             {
+                ___input.enabled = true;
                 if (fps != null) GameObject.Destroy(fps);
             }
         }

@@ -81,10 +81,5 @@ namespace Mododger
 
             transform.localPosition = new Vector3(transform.localPosition.x, Mathf.Clamp(transform.localPosition.y, originalY, Mathf.Infinity), transform.localPosition.z);
         }
-
-        private void OnDestroy()
-        {
-            GameData.mouseSpeed = PlayerMovementPatch.originalMouseSpeed;
-        }
     }
 }
