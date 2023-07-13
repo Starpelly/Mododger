@@ -18,16 +18,16 @@ namespace Mododger
             if (notEditor)
             {
                 if (MododgerMain.GameData.firstPersonMode)
-                    __instance.camH = GameObject.Instantiate(new GameObject());
+                    __instance.camH = Object.Instantiate(new GameObject());
 
                 if (MododgerMain.GameData.discord)
                 {
-                    var difficulty = string.Empty;
+                    string difficulty;
 
                     if (LevelData.settings.customDiff != string.Empty)
                         difficulty = LevelData.settings.customDiff;
                     else
-                        difficulty = LevelData.difficulties[LevelData.settings.difficulty - 1]; // Why is it offseted by 1???
+                        difficulty = LevelData.difficulties[LevelData.settings.difficulty - 1]; // Why is it offsetted by 1???
 
                     var designer = difficulty + " by: " + LevelData.settings.designer;
                     var name = LevelData.settings.artist + " - " + LevelData.settings.title;
@@ -43,6 +43,9 @@ namespace Mododger
                     MododgerMain.SetPresence(designer, name, thumb, true);
                 }
             }
+
+            var hitboxes = __instance.camH.transform.GetChild(3).gameObject.AddComponent<Hitboxes>();
+            hitboxes.mainGame = __instance;
         }
 
         // Some assholes decided to use TMP rich text, so that makes it awkward for discord to parse it.
@@ -51,12 +54,13 @@ namespace Mododger
         {
             var rich = new Regex(@"<[^>]*>");
 
+            var retur = str;
             if (rich.IsMatch(str))
             {
-                str = rich.Replace(str, string.Empty);
+                retur = rich.Replace(str, string.Empty);
             }
 
-            return str;
+            return retur;
         }
 
         [HarmonyPatch("Update")]
@@ -67,11 +71,25 @@ namespace Mododger
             {
                 if (MododgerMain.GameData.firstPersonMode)
                 {
-                    var vig = (Vignette)(typeof(MainGame).GetField("vig", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance));
-                    vig.center.value = new Vector2(0.5f, 0.5f);
-                    typeof(MainGame).GetField("vig", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(__instance, vig);
+                    var vig = (Vignette)(typeof(MainGame).GetField("vig", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(__instance));
+                    if (vig != null)
+                    {
+                        vig.center.value = new Vector2(0.5f, 0.5f);
+                        typeof(MainGame).GetField("vig", BindingFlags.NonPublic | BindingFlags.Instance)
+                            ?.SetValue(__instance, vig);
+                    }
                 }
             }
+            
+            __instance.camH.transform.GetChild(3).GetComponent<Camera>().enabled = !MododgerMain.GameData.hideBullets;
+            __instance.camH.transform.GetChild(4).GetComponent<Camera>().enabled = !MododgerMain.GameData.hideBullets;
+        }
+
+        [HarmonyPatch("restart")]
+        [HarmonyPostfix]
+        public static void Restart(bool notify = true)
+        {
+            // GameObject.FindObjectOfType<TAS>().SetVelocities();
         }
     }
 }

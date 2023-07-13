@@ -9,7 +9,7 @@ namespace Mododger
         private static Transform camera;
 
         private float originalY;
-        private float yVelocity = 0f;
+        // private float yVelocity = 0f;
 
         public void Start()
         {

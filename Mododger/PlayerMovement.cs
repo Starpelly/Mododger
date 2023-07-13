@@ -7,10 +7,8 @@ namespace Mododger
     public class PlayerMovementPatch
     {
         private static float radius = 5f;
-
         private static FirstPersonPlayerMovement fps;
         private static float mouseSpeed;
-        public static float originalMouseSpeed = 25;
         private static bool startedWithFirstperson = false;
 
         [HarmonyPatch("Start")]
@@ -29,8 +27,9 @@ namespace Mododger
                 {
                     if (fps != null) GameObject.Destroy(fps);
                 }
-                originalMouseSpeed = GameData.mouseSpeed;
             }
+
+            // __instance.gameObject.AddComponent<TAS>();
         }
 
         /// <summary>
@@ -41,6 +40,8 @@ namespace Mododger
         [HarmonyPrefix]
         public static void Update(playerMovement __instance, ref PlayerInput ___input)
         {
+            // GameObject.FindObjectOfType<TAS>().UpdateTAS();
+
             if (MododgerMain.GameData.ignoreArena)
             {
                 radius = __instance.GetComponent<MainGame>().radius;
@@ -48,6 +49,16 @@ namespace Mododger
             }
 
             mouseSpeed = GameData.mouseSpeed;
+            // GameData.mouseSpeed = 0.0f;
+
+            if (LevelData.type == LevelData.levelType.editor)
+            {
+                if (MododgerMain.GameData.lockPlayerInEditor)
+                {
+                    GameData.mouseSpeed = 0f;
+                    __instance.transform.localPosition = new Vector3(0, __instance.transform.localPosition.y, 0);
+                }
+            }
 
             if (startedWithFirstperson)
             {
@@ -72,6 +83,8 @@ namespace Mododger
             __instance.GetComponent<MainGame>().radius = radius;
 
             GameData.mouseSpeed = mouseSpeed;
+            // Cursor.visible = true;
+            // Cursor.lockState = CursorLockMode.None;
         }
     }
 }

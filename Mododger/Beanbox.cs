@@ -9,13 +9,15 @@ namespace Mododger
     public class Beanbox
     {
         private static GameObject beanboxClipsHolder;
-        public static Dictionary<string, AudioSource> beanboxClips = new();
+        public static readonly Dictionary<string, AudioSource> beanboxClips = new();
 
         public static async UniTask Init()
         {
-            beanboxClipsHolder = new GameObject();
-            beanboxClipsHolder.name = "beanbox";
-            GameObject.DontDestroyOnLoad(beanboxClipsHolder); // I spent 20 minutes figuring out why this wasn't working lol
+            beanboxClipsHolder = new GameObject
+            {
+                name = "beanbox"
+            };
+            Object.DontDestroyOnLoad(beanboxClipsHolder); // I spent 20 minutes figuring out why this wasn't working lol
 
             var clips = Directory.GetFiles(Tools.AssetPath("beanbox"));
             foreach (var clip in clips)

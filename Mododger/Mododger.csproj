@@ -35,6 +35,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>libs\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="ShapesRuntime">
+      <HintPath>libs\ShapesRuntime.dll</HintPath>
+    </Reference>
     <Reference Include="UniTask">
       <HintPath>libs\UniTask.dll</HintPath>
     </Reference>

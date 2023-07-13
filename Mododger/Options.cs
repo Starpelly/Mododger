@@ -22,8 +22,8 @@ namespace Mododger
         {
             var ver = optionsObj.transform.Find("canvas/stuff").Find("ver");
             var modVer = GameObject.Instantiate(ver, optionsObj.transform.Find("canvas/stuff"));
-            modVer.GetComponent<RectTransform>().localPosition = new Vector2(-435, modVer.GetComponent<RectTransform>().localPosition.y);
-            modVer.GetComponent<TMP_Text>().text = "mod ver: " + MododgerMain.pluginVersion;
+            modVer.GetComponent<RectTransform>().localPosition = new Vector2(-440, modVer.GetComponent<RectTransform>().localPosition.y);
+            modVer.GetComponent<TMP_Text>().text = "mod ver " + MododgerMain.pluginVersion;
 
             GetAllComponents();
 
@@ -44,7 +44,7 @@ namespace Mododger
             var scrollRect = scroll.GetComponent<RectTransform>();
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scrollRect.sizeDelta = new Vector2(800, 650);
-            scrollRect.localPosition -= new Vector3(0, 0);
+            scrollRect.localPosition -= new Vector3(0, 129);
             scroll.gameObject.AddComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, 0);
             scroll.name = "mods";
             scroll.gameObject.SetActive(true);
@@ -67,6 +67,11 @@ namespace Mododger
             AddToggle("ignore arena", MododgerMain.GameData.ignoreArena);
             AddToggle("remove domes", MododgerMain.GameData.removeDomes);
             AddToggle("discord rich presence", MododgerMain.GameData.discord);
+            AddToggle("show bullet hitboxes", MododgerMain.GameData.showHitboxes);
+            AddToggle("hide bullets", MododgerMain.GameData.hideBullets);
+            AddToggle("lock player in editor", MododgerMain.GameData.lockPlayerInEditor);
+            // AddToggle("animated hearts", MododgerMain.GameData.animatedHearts);
+            AddToggle("fix editor lines", MododgerMain.GameData.fixEditorLines);
             // AddToggle("beanbox", MododgerMain.GameData.beanMode);
         }
 
@@ -164,6 +169,40 @@ namespace Mododger
                     MododgerMain.EnableDiscord();
                 else
                     MododgerMain.DisableDiscord();
+            }
+            if (obj.parent.name == "show bullet hitboxes")
+            {
+                MododgerMain.GameData.showHitboxes = !MododgerMain.GameData.showHitboxes;
+                ToggleInvoke(new object[] { obj, MododgerMain.GameData.showHitboxes, true });
+                MododgerMain.UpdateData();
+            }
+            if (obj.parent.name == "hide bullets")
+            {
+                MododgerMain.GameData.hideBullets = !MododgerMain.GameData.hideBullets;
+                ToggleInvoke(new object[] { obj, MododgerMain.GameData.hideBullets, true });
+                MododgerMain.UpdateData();
+            }
+            if (obj.parent.name == "lock player in editor")
+            {
+                MododgerMain.GameData.lockPlayerInEditor = !MododgerMain.GameData.lockPlayerInEditor;
+                ToggleInvoke(new object[] { obj, MododgerMain.GameData.lockPlayerInEditor, true });
+                MododgerMain.UpdateData();
+            }
+            if (obj.parent.name == "animated hearts")
+            {
+                MododgerMain.GameData.animatedHearts = !MododgerMain.GameData.animatedHearts;
+                ToggleInvoke(new object[] { obj, MododgerMain.GameData.animatedHearts, true });
+                MododgerMain.UpdateData();
+            }
+            if (obj.parent.name == "fix editor lines")
+            {
+                MododgerMain.GameData.fixEditorLines = !MododgerMain.GameData.fixEditorLines;
+                ToggleInvoke(new object[] { obj, MododgerMain.GameData.fixEditorLines, true });
+                MododgerMain.UpdateData();
+
+                if (MododgerMain.GameData.fixEditorLines)
+                    GameState.notify("warning: line colors may be off", 2.75f, Notification.types.problem, false, true);
+                // GameState.modal(ModalWindow.types.notes, Color.yellow, "Warning: Colors may be off.", "OK", "", null, null, "l", "");
             }
             /*
             if (obj.parent.name == "beanbox")

@@ -1,20 +1,20 @@
 ﻿using BepInEx;
+using DiscordRPC;
 using HarmonyLib;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using DiscordRPC;
 
 namespace Mododger;
 
 [BepInPlugin(pluginGuid, pluginName, pluginVersion)]
 public class MododgerMain : BaseUnityPlugin
 {
-    public const string pluginGuid = "com.soundodgermodding.mododger";
-    public const string pluginName = "Mododger";
-    public const string pluginVersion = "1.2.0";
+    private const string pluginGuid = "com.soundodgermodding.mododger";
+    private const string pluginName = "Mododger";
+    public const string pluginVersion = "1.3.0";
 
-    private static GUIStyle style = GUIStyle.none;
+    private static readonly GUIStyle style = GUIStyle.none;
 
     public static bool OpenedEditorFromWelcome = false;
     public static ModGameData GameData;
@@ -26,18 +26,15 @@ public class MododgerMain : BaseUnityPlugin
 
     private void Awake()
     {
-        if (File.Exists(ModGameData.GetJsonFile()))
-            GameData = ModGameData.ReadFromJson();
-        else
-            GameData = new ModGameData();
+        GameData = File.Exists(ModGameData.GetJsonFile()) ? ModGameData.ReadFromJson() : new ModGameData();
 
         style.fontSize = 32;
         var font = Resources.Load("lang/fonts/" + "Century Gothic SDF") as TMP_FontAsset;
-        style.font = font.sourceFontFile;
+        if (font != null) style.font = font.sourceFontFile;
 
         new Harmony(pluginGuid).PatchAll();
 
-        Beanbox.Init();
+        // Beanbox.Init();
 
         if (GameData.discord)
         {
@@ -47,8 +44,7 @@ public class MododgerMain : BaseUnityPlugin
 
     private void Update()
     {
-        if (DiscordClient != null)
-            DiscordClient.Invoke();
+        DiscordClient?.Invoke();
     }
 
     private void OnApplicationQuit()
@@ -57,11 +53,13 @@ public class MododgerMain : BaseUnityPlugin
         DiscordClient.Dispose();
     }
 
+    /*
     public void OnGUI()
     {
         // GUI.Label(new Rect(0, 0, 400, 200), "Mododger v" + pluginVersion, style);
         // GUI.Label(new Rect(0, 60, 400, 200), "no", style);
     }
+    */
 
     /// <summary>
     /// Updates the chosen data to the configuration file.
@@ -82,6 +80,7 @@ public class MododgerMain : BaseUnityPlugin
                 LargeImageKey = largeImageKey
             }
         };
+        
         if (startCounter)
             CurrentRichPresence.Timestamps = Timestamps.Now;
 
@@ -91,8 +90,7 @@ public class MododgerMain : BaseUnityPlugin
 
     public static void EnableDiscord()
     {
-        if (DiscordClient == null)
-            DiscordClient = new DiscordRpcClient("1125083189380137060");
+        DiscordClient ??= new DiscordRpcClient("1125083189380137060");
 
         DiscordClient.Initialize();
         if (CurrentRichPresence != null)

@@ -11,6 +11,11 @@ namespace Mododger
         public bool firstPersonMode;
         public bool beanbox;
         public bool discord;
+        public bool showHitboxes;
+        public bool hideBullets;
+        public bool lockPlayerInEditor;
+        public bool animatedHearts;
+        public bool fixEditorLines;
 
         public static void SaveToJson(ModGameData m)
         {
