@@ -2,6 +2,7 @@
 using DiscordRPC;
 using HarmonyLib;
 using System.IO;
+using System.Net;
 using TMPro;
 using UnityEngine;
 
@@ -16,9 +17,10 @@ public class MododgerMain : BaseUnityPlugin
 
     private static readonly GUIStyle style = GUIStyle.none;
 
-    public static bool OpenedEditorFromWelcome = false;
     public static ModGameData GameData;
 
+    public static bool OpenedEditorFromWelcome = false;
+    
     public static MainGame MainGame => GameObject.FindObjectOfType<MainGame>();
 
     private static DiscordRpcClient DiscordClient;

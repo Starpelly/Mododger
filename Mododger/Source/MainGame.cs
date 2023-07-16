@@ -1,6 +1,8 @@
-﻿using HarmonyLib;
+﻿using System.Net;
+using HarmonyLib;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -83,6 +85,12 @@ namespace Mododger
             
             __instance.camH.transform.GetChild(3).GetComponent<Camera>().enabled = !MododgerMain.GameData.hideBullets;
             __instance.camH.transform.GetChild(4).GetComponent<Camera>().enabled = !MododgerMain.GameData.hideBullets;
+        }
+        
+        [HarmonyPatch("getHit")]
+        [HarmonyPostfix]
+        public static void GetHit(PlayerInfo pl, GameObject obj = null, bool hugOut = false)
+        {
         }
 
         [HarmonyPatch("restart")]
